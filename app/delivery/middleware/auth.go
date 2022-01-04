@@ -9,18 +9,18 @@ import (
 )
 
 func Authentication() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		verifyToken, err := helper.VerifyToken(c)
+	return func(ctx *gin.Context) {
+		verifyToken, err := helper.VerifyToken(ctx)
 		_ = verifyToken
 
 		if err != nil {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 				"message": err.Error(),
 			})
 			return
 		}
-		c.Set("user", verifyToken)
-		c.Next()
+		ctx.Set("user", verifyToken)
+		ctx.Next()
 	}
 }
 

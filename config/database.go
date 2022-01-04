@@ -40,7 +40,7 @@ func StartDB(){
 	}
 
 	fmt.Println("success connect to database")
-	db.AutoMigrate(domain.User{})
+	db.AutoMigrate(domain.User{}, domain.Category{}, domain.Task{})
 	SetUpDBConnection(db)
 }
 

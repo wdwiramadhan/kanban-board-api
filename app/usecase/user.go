@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"github.com/wdwiramadhan/kanban-board-api/app/helper"
@@ -62,7 +61,6 @@ func (u *UserUsecase) UpdateUser(ctx context.Context, user *domain.User) (domain
 	user.UpdatedAt = time.Now()
 	err = u.userRepository.UpdateUser(ctx, user)
 	if err != nil {
-		fmt.Println(err.Error())
 		return domain.User{}, domain.ErrInternalServerError
 	}
 	return *user, nil
