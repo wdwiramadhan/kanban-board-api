@@ -1,1 +1,1 @@
-web: github.com/wdwiramadhan/kanban-board-api
+web: bin/kanban-board-api
