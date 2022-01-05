@@ -12,13 +12,14 @@ import (
 )
 
 type UserHandler struct {
-	UserUsecase domain.UserUsecase
+	userUsecase domain.UserUsecase
 }
 
 func NewUserHanlder(r *gin.RouterGroup, userUsecase domain.UserUsecase){
-	handler := &UserHandler{
-		UserUsecase: userUsecase,
-	}
+	handler := &UserHandler{userUsecase}
+	r.GET("/", func(ctx *gin.Context){
+		ctx.JSON(http.StatusOK, gin.H{"message": "Hello World"})
+	})
 	userRoute := r.Group("/users")
 	userRoute.POST("/register", handler.Register)
 	userRoute.POST("/login", handler.Login)
@@ -46,7 +47,7 @@ func (u *UserHandler) Register(ctx *gin.Context){
 	}
 	var user domain.User
 	copier.Copy(&user, &userRegister)
-	userData, err := u.UserUsecase.Register(ctx.Request.Context(), &user)
+	userData, err := u.userUsecase.Register(ctx.Request.Context(), &user)
 	if err != nil {
 		ctx.JSON(getStatusCode(err), gin.H{"message": err.Error()})
 		return
@@ -80,7 +81,7 @@ func(u *UserHandler) Login(ctx *gin.Context){
 	}
 	var user domain.User
 	copier.Copy(&user, &userLogin)
-	token, err := u.UserUsecase.Login(ctx.Request.Context(), &user)
+	token, err := u.userUsecase.Login(ctx.Request.Context(), &user)
 	if err != nil {
 		ctx.JSON(getStatusCode(err), gin.H{"message": err.Error()})
 		return
@@ -115,7 +116,7 @@ func(u *UserHandler) UpdateAccount(ctx *gin.Context){
 	userAuth := ctx.MustGet("user").(jwt.MapClaims)
 	userID :=  int64(userAuth["id"].(float64))
 	user.ID = userID
-	userData, err := u.UserUsecase.UpdateUser(ctx.Request.Context(), &user)
+	userData, err := u.userUsecase.UpdateUser(ctx.Request.Context(), &user)
 	if err != nil {
 		ctx.JSON(getStatusCode(err), gin.H{"message": err.Error()})
 		return
@@ -134,7 +135,7 @@ func(u *UserHandler) UpdateAccount(ctx *gin.Context){
 func(u *UserHandler) DeleteAccount(ctx *gin.Context){
 	userAuth := ctx.MustGet("user").(jwt.MapClaims)
 	userID :=  int64(userAuth["id"].(float64))
-	err := u.UserUsecase.DeleteUser(ctx, userID)
+	err := u.userUsecase.DeleteUser(ctx, userID)
 	if err != nil {
 		ctx.JSON(getStatusCode(err), gin.H{"message": err.Error()})
 		return

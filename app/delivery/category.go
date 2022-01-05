@@ -12,13 +12,11 @@ import (
 )
 
 type CategoryHandler struct {
-	CategoryUsecase domain.CategoryUsecase
+	categoryUsecase domain.CategoryUsecase
 }
 
 func NewCategoryHandler(r *gin.RouterGroup, categoryUsecase domain.CategoryUsecase){
-	handler := &CategoryHandler{
-		CategoryUsecase: categoryUsecase,
-	}
+	handler := &CategoryHandler{categoryUsecase}
 	categoryRoute := r.Group("/categories")
 	categoryRoute.Use(middleware.Authentication())
 	categoryRoute.GET("/", handler.GetCategories)
@@ -29,7 +27,7 @@ func NewCategoryHandler(r *gin.RouterGroup, categoryUsecase domain.CategoryUseca
 }
 
 func(c *CategoryHandler) GetCategories(ctx *gin.Context){
-	categories, err := c.CategoryUsecase.GetCategories(ctx.Request.Context())
+	categories, err := c.categoryUsecase.GetCategories(ctx.Request.Context())
 	if err != nil {
 		ctx.JSON(getStatusCode(err), gin.H{"message": err.Error()})
 		return
@@ -54,7 +52,7 @@ func(c *CategoryHandler) StoreCategory(ctx *gin.Context){
 	}
 	var category domain.Category
 	copier.Copy(&category, &storeCategory)
-	categoryData, err := c.CategoryUsecase.StoreCategory(ctx.Request.Context(), &category)
+	categoryData, err := c.categoryUsecase.StoreCategory(ctx.Request.Context(), &category)
 	if err != nil {
 		ctx.JSON(getStatusCode(err), gin.H{"message": err.Error()})
 		return
@@ -88,7 +86,7 @@ func(c *CategoryHandler) UpdateCategory(ctx *gin.Context){
 	copier.Copy(&category, &updateCategory)
 	categoryId,_ := strconv.ParseInt(ctx.Param("categoryId"), 10, 64)
 	category.ID = categoryId
-	categoryData, err := c.CategoryUsecase.UpdateCategory(ctx, &category)
+	categoryData, err := c.categoryUsecase.UpdateCategory(ctx, &category)
 	if err != nil {
 		ctx.JSON(getStatusCode(err), gin.H{"message": err.Error()})
 		return
@@ -106,7 +104,7 @@ func(c *CategoryHandler) UpdateCategory(ctx *gin.Context){
 
 func(c *CategoryHandler) DeleteCategory(ctx *gin.Context){
 	categoryId,_ := strconv.ParseInt(ctx.Param("categoryId"), 10, 64)
-	err := c.CategoryUsecase.DeleteCategory(ctx, categoryId)
+	err := c.categoryUsecase.DeleteCategory(ctx, categoryId)
 	if err != nil {
 		ctx.JSON(getStatusCode(err), gin.H{"message": err.Error()})
 		return

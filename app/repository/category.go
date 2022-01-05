@@ -47,7 +47,7 @@ func (c *CategoryRepository) GetCategoryByID(ctx context.Context, id int64) (dom
 }
 
 func (c *CategoryRepository) UpdateCategory(ctx context.Context, category *domain.Category) (error) {
-	err := c.Conn.Model(category).Select("type").Updates(category).Error
+	err := c.Conn.Model(category).Updates(category).Error
 	return err
 }
 

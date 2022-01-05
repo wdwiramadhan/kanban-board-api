@@ -43,7 +43,7 @@ func(u *UserRepository) GetUserByEmail(ctx context.Context, email string) (domai
 }
 
 func(u *UserRepository) UpdateUser(ctx context.Context, user *domain.User) (error){
-	err := u.Conn.Model(user).Select("full_name", "email", "updated_at").Updates(user).Error
+	err := u.Conn.Model(user).Updates(user).Error
 	return err
 }
 
