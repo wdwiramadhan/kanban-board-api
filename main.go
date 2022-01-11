@@ -11,7 +11,7 @@ import (
 	"github.com/wdwiramadhan/kanban-board-api/config"
 )
 
-func main(){
+func main() {
 	router := gin.Default()
 	config.StartDB()
 	db := config.GetDBConnection()
@@ -23,7 +23,7 @@ func main(){
 	categoryUsecase := _usecase.NewCategoryUsecase(categoryRepository)
 
 	taskRepository := _repository.NewTaskRepository(db)
-	taskUsecase := _usecase.NewTaskUsecase(taskRepository)
+	taskUsecase := _usecase.NewTaskUsecase(taskRepository, categoryRepository)
 
 	api := router.Group("/")
 	_handler.NewUserHanlder(api, userUsecase)
@@ -34,5 +34,5 @@ func main(){
 	if port == "" {
 		port = "8080"
 	}
-	router.Run(":"+ port)
+	router.Run(":" + port)
 }
