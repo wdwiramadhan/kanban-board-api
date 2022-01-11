@@ -8,11 +8,12 @@ import (
 )
 
 type TaskUsecase struct {
-	taskRepository domain.TaskRepository
+	taskRepository     domain.TaskRepository
+	categoryRepository domain.CategoryRepository
 }
 
-func NewTaskUsecase(taskRepository domain.TaskRepository) domain.TaskUsecase {
-	return &TaskUsecase{taskRepository}
+func NewTaskUsecase(taskRepository domain.TaskRepository, categoryRepository domain.CategoryRepository) domain.TaskUsecase {
+	return &TaskUsecase{taskRepository, categoryRepository}
 }
 
 func (t *TaskUsecase) GetTasks(ctx context.Context) (interface{}, error) {
@@ -27,6 +28,10 @@ func (t *TaskUsecase) StoreTask(ctx context.Context, task *domain.Task) (domain.
 	task.CreatedAt = time.Now()
 	task.UpdatedAt = time.Now()
 
+	_, err := t.categoryRepository.GetCategoryByID(ctx, task.CategoryID)
+	if err != nil {
+		return domain.Task{}, domain.ErrInternalServerError
+	}
 	taskId, err := t.taskRepository.StoreTask(ctx, task)
 	if err != nil {
 		return domain.Task{}, domain.ErrInternalServerError
@@ -42,22 +47,6 @@ func (t *TaskUsecase) GetTaskByID(ctx context.Context, id int64) (domain.Task, e
 	}
 	return task, nil
 
-}
-
-func (t *TaskUsecase) UpdateStatusTask(ctx context.Context, task *domain.Task) (domain.Task, error) {
-	_, err := t.taskRepository.GetTaskByID(ctx, task.ID)
-
-	if err != nil {
-		return domain.Task{}, domain.ErrNotFound
-	}
-
-	task.UpdatedAt = time.Now()
-
-	err = t.taskRepository.UpdateTask(ctx, task)
-	if err != nil {
-		return domain.Task{}, domain.ErrInternalServerError
-	}
-	return *task, nil
 }
 
 func (t *TaskUsecase) UpdateTask(ctx context.Context, task *domain.Task) (domain.Task, error) {

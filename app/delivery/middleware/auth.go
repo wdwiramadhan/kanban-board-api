@@ -24,12 +24,12 @@ func Authentication() gin.HandlerFunc {
 	}
 }
 
-func Authorization(roles []string) gin.HandlerFunc{
+func Authorization(roles []string) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		userAuth := ctx.MustGet("user").(jwt.MapClaims)
 		userRole := userAuth["role"]
-		for _,role := range roles {
-			if role  == userRole {
+		for _, role := range roles {
+			if role == userRole {
 				ctx.Next()
 				return
 			}

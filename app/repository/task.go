@@ -42,7 +42,6 @@ func (t *TaskRepository) GetTasks(ctx context.Context) (interface{}, error) {
 	}
 
 	return tasks, nil
-
 }
 
 func (t *TaskRepository) StoreTask(ctx context.Context, task *domain.Task) (taskId int64, err error) {

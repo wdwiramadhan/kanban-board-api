@@ -21,7 +21,6 @@ type TaskUsecase interface {
 	GetTasks(ctx context.Context) (interface{}, error)
 	StoreTask(ctx context.Context, task *Task) (Task, error)
 	GetTaskByID(ctx context.Context, id int64) (Task, error)
-	UpdateStatusTask(ctx context.Context, task *Task) (Task, error)
 	UpdateTask(ctx context.Context, task *Task) (Task, error)
 	DeleteTask(ctx context.Context, id int64) error
 }
