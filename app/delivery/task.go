@@ -140,7 +140,7 @@ func (t *TaskHandler) UpdateTask(ctx *gin.Context) {
 
 func (t *TaskHandler) UpdateStatusTask(ctx *gin.Context) {
 	type UpdateStatusTask struct {
-		Status bool `json:"status"`
+		Status bool `json:"status" validate:"required"`
 	}
 
 	var updateStatusTask UpdateStatusTask
@@ -188,7 +188,7 @@ func (t *TaskHandler) UpdateStatusTask(ctx *gin.Context) {
 
 func (t *TaskHandler) UpdateCategoryTask(ctx *gin.Context) {
 	type UpdateCategoryTask struct {
-		CategoryID int64 `json:"category_id"`
+		CategoryID int64 `json:"category_id" validate:"required"`
 	}
 
 	var updateCategoryTask UpdateCategoryTask
